@@ -52,3 +52,6 @@ path = "src/bin/day11/main.rs"
 [[bin]]
 name = "day12"
 path = "src/bin/day12/main.rs"
+
+[dependencies]
+regex = "1.11.1"
