@@ -1,5 +1,6 @@
 use std::time::Instant;
-
+mod a;
+mod b;
 fn main() {
     let input = include_str!("input.txt");
     let start = Instant::now();
@@ -12,9 +13,8 @@ fn main() {
 }
 
 fn part1(input: &str) {
-    println!("{:?}", input);
+    a::solve(input);
 }
-
 fn part2(input: &str) {
-    println!("{:?}", input);
+    b::solve(input);
 }
