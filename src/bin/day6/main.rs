@@ -12,54 +12,9 @@ fn main() {
 }
 
 fn part1(input: &str) {
-   let (map, initial_position) = parse_input(input);
-   let mut visited = HashSet::with_capacity(1000);
-   visited.insert(initial_position);
-   let mut current_pos = initial_position;
-   let mut moves_helper = Move::new();
-   let mut next_move = moves_helper.next();
-   loop {
-       let next_pos = (current_pos.0 + next_move.0, current_pos.1 + next_move.1);
-       if is_in_bound(next_pos, map.len() as i32) {
-           let char = map[next_pos.0 as usize][next_pos.1 as usize];
-           if char != '#' {
-               current_pos = next_pos;
-               visited.insert(current_pos);
-           } else {
-               next_move = moves_helper.next();
-           }
-       } else {
-           println!("{:?}", next_move);
-           println!("{:?}", current_pos);
-           break;
-       }
-   }
-   println!("{:?}", visited.len());
-}
-
-fn part2(input:&str) {
-    let (mut map, initial_position) = parse_input(input);
-    let mut sum = 0;
-    let mut blocked = HashSet::with_capacity(2000);
-    let mut current_pos = initial_position;
-    let mut moves_helper = Move::new();
-    let mut next_move = moves_helper.next();
-    
-    for i in 0..map.len() {
-        for j in 0..map.len() {
-            if map[i][j] == '.' {
-                map[i][j] = '#';
-                if check(&map, initial_position) {blocked.insert((i,j));};
-                map[i][j] = '.';
-            }
-        }
-    }
-    println!("{:?}", blocked.len());
-}
-
-fn check(map: &Vec<Vec<char>>, initial_position:(i32,i32)) -> bool {
-    
-    let mut  step = 0;
+    let (map, initial_position) = parse_input(input);
+    let mut visited = HashSet::with_capacity(1000);
+    visited.insert(initial_position);
     let mut current_pos = initial_position;
     let mut moves_helper = Move::new();
     let mut next_move = moves_helper.next();
@@ -69,7 +24,53 @@ fn check(map: &Vec<Vec<char>>, initial_position:(i32,i32)) -> bool {
             let char = map[next_pos.0 as usize][next_pos.1 as usize];
             if char != '#' {
                 current_pos = next_pos;
-                step+=1;
+                visited.insert(current_pos);
+            } else {
+                next_move = moves_helper.next();
+            }
+        } else {
+            println!("{:?}", next_move);
+            println!("{:?}", current_pos);
+            break;
+        }
+    }
+    println!("{:?}", visited.len());
+}
+
+fn part2(input: &str) {
+    let (mut map, initial_position) = parse_input(input);
+    let mut sum = 0;
+    let mut blocked = HashSet::with_capacity(2000);
+    let mut current_pos = initial_position;
+    let mut moves_helper = Move::new();
+    let mut next_move = moves_helper.next();
+
+    for i in 0..map.len() {
+        for j in 0..map.len() {
+            if map[i][j] == '.' {
+                map[i][j] = '#';
+                if check(&map, initial_position) {
+                    blocked.insert((i, j));
+                };
+                map[i][j] = '.';
+            }
+        }
+    }
+    println!("{:?}", blocked.len());
+}
+
+fn check(map: &Vec<Vec<char>>, initial_position: (i32, i32)) -> bool {
+    let mut step = 0;
+    let mut current_pos = initial_position;
+    let mut moves_helper = Move::new();
+    let mut next_move = moves_helper.next();
+    loop {
+        let next_pos = (current_pos.0 + next_move.0, current_pos.1 + next_move.1);
+        if is_in_bound(next_pos, map.len() as i32) {
+            let char = map[next_pos.0 as usize][next_pos.1 as usize];
+            if char != '#' {
+                current_pos = next_pos;
+                step += 1;
                 if step > 6000 {
                     return true;
                 }
@@ -81,8 +82,8 @@ fn check(map: &Vec<Vec<char>>, initial_position:(i32,i32)) -> bool {
         }
     }
     false
-} 
-/* 
+}
+/*
 fn part2(input: &str) {
     let (mut map, initial_position) = parse_input(input);
     let mut blocked = HashSet::new();
@@ -158,11 +159,11 @@ fn parse_input(input: &str) -> (Vec<Vec<char>>, (i32, i32)) {
     (map, initial_position)
 }
 
-#[derive(Clone,Debug)]
+#[derive(Clone, Debug)]
 struct Move {
     directions: Vec<(i32, i32)>,
     current: usize,
-    started: bool
+    started: bool,
 }
 
 impl Move {
@@ -170,14 +171,14 @@ impl Move {
         Self {
             directions: vec![(-1, 0), (0, 1), (1, 0), (0, -1)],
             current: 0,
-            started: false
+            started: false,
         }
     }
-    
-    pub fn  next(&mut self) -> (i32, i32) {
+
+    pub fn next(&mut self) -> (i32, i32) {
         if !self.started {
             self.started = true;
-            return self.directions[0]
+            return self.directions[0];
         }
         self.current = (self.current + 1) % 4;
         self.directions[self.current]
