@@ -17,5 +17,5 @@ fn part1(input: &str) {
 }
 
 fn part2(input: &str) {
-  //  b::solve(input);
+    b::solve(input);
 }
